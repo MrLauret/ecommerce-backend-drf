@@ -66,6 +66,14 @@ def products_api(request):
                 img_copy.save(resize_path)
 
         data["image"] = json.dumps(saved_filename)
+        if not data["brand"].isdigit():
+            data["brand"], data["brand"] = Brand.objects.get_or_create(name=data["brand"]) # (obj, created)
+        else:
+            data["brand"] = Brand.objects.get(id=data["brand"])
+        if not data["category"].isdigit():
+            data["category"], data["category"] = Category.objects.get_or_create(name=data["category"])
+        else:
+            data["category"] = Category.objects.get(id=data["category"])
         serializer = ProductSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
