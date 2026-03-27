@@ -1,6 +1,8 @@
 from django.db import models
-from users.models import User
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Blog(models.Model):
     title = models.CharField(max_length=150)
