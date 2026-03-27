@@ -11,11 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vy4sed+1wt%95g8orr5pl1b^xk&g**jk*m%=g7of-24^bk51t5'
+SECRET_KEY = '1234'
+#change this key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'blogs',
     'users',
     'corsheaders',
-    "products",
+    'products',
 ]
 
 from datetime import timedelta

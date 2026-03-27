@@ -2,7 +2,7 @@ asgiref==3.11.0
 blinker==1.9.0
 certifi==2026.2.25
 click==8.3.1
-Django==6.0.1
+Django
 django-ckeditor==6.7.3
 django-cors-headers==4.9.0
 django-debug-toolbar==6.2.0

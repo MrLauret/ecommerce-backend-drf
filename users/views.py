@@ -1,20 +1,21 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
-from users.models import User
-from django.contrib.auth import authenticate
-from .serializers import UserSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import status, generics
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
+from rest_framework_simplejwt.tokens import RefreshToken
 
-@api_view(["POST"])
-def register(request):
-    serializer = UserSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"success": "Successfully register"}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+
+from .serializers import UserSerializer
+
+User = get_user_model() #gets the defined user model in settings
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User
+    serializer_class = UserSerializer
 
 
 @api_view(["POST"])
@@ -41,6 +42,17 @@ def login(request):
         "user_email": findUser.email
     }, status=status.HTTP_200_OK)
     
+class profile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'avatar': user.avatar.url,
+            'username': user.username,
+            'user_id': user.id,
+            'email': user.email
+        })
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdminUser])
@@ -62,7 +74,7 @@ def user_detail(request, user_id):
         return Response({"errors": "User not found"}, status=404)
     if request.method == "GET":
         serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK) #I dont speak viet :3
     if request.method == "PATCH" and not user.is_staff: #để admin cũng có quyền sửa
         user_data = request.data
         user_data = {key: value for key, value in user_data.items() if value not in ("", None, "undefined", "null")} #Để tránh update "" và None vào db
