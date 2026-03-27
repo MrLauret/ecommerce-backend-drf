@@ -6,7 +6,7 @@ class Category(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name="brands")
+    category = models.ManyToManyField(Category, blank=True, related_name="brands")
 
 class Product(models.Model):
     productname = models.CharField(max_length=150)
