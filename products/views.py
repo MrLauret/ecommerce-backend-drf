@@ -70,10 +70,11 @@ def products_api(request):
             category, created = Category.objects.get_or_create(name=data["category"])
             data["category"] = category.id
             if data["brand"].isdigit():
-                Brand.objects.create(name=Brand.objects.get(id=data["brand"]).name, category_id=data["category"])
-        if not data["brand"].isdigit():
-            brand, created = Brand.objects.get_or_create(name=data["brand"], category_id=data["category"]) # (obj, created)
-            data["brand"] = brand.id
+                category.brands.add(data["brand"])
+            else:
+                brand, created = Brand.objects.get_or_create(name=data["brand"])
+                brand.category.add(category)
+                data["brand"] = brand
         serializer = ProductSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
